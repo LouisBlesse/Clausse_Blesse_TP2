@@ -1,4 +1,6 @@
+import edu.uqac.aop.chess.*;
 import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -11,6 +13,8 @@ public class Main {
         }
         else if (choix == 2){
             System.out.println("WIP");
+            Chess chess = new Chess();
+            chess.main(null);
         }
     }
 }
