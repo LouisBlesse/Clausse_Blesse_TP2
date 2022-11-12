@@ -1,3 +1,4 @@
+import edu.uqac.aop.chess.agent.HumanPlayer;
 import edu.uqac.aop.chess.agent.Move;
 import edu.uqac.aop.chess.piece.Piece;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -43,7 +44,7 @@ public aspect Test {
     }
 
     Object around (Board plateau, Move move):
-    call (void edu.uqac.aop.chess.Board.movePiece(Move)) && target( plateau ) && args( move ) {
+    call (void edu.uqac.aop.chess.Board.movePiece(Move)) && target( plateau ) && args( move ) && !within(edu.uqac.aop.chess.agent.AiPlayer){
         if ( move.xF > 7 || move.yF > 7){
             System.out.println("La pièce ne peut pas bouger car elle sortirait du cadre, vous perdez votre tour");
             return null;
@@ -52,7 +53,30 @@ public aspect Test {
             System.out.println("La pièce reste dans le cadre");
             return proceed(plateau,move);
         }
+    }
 
+    Object around (Board plateau, Move move):
+    call (void edu.uqac.aop.chess.Board.movePiece(Move)) && target( plateau ) && args( move ) && !within(edu.uqac.aop.chess.agent.AiPlayer){
+
+        if (plateau.getGrid()[move.xF][move.yF].getPiece() != null){
+            if(plateau.getGrid()[move.xF][move.yF].getPiece().getPlayer() != 0){
+                System.out.println("Vous ne pouvez pas manger votre propore pièce, vous perdez votre tour");
+                return null;
+            }
+            else{
+                System.out.println("Vous mangez une pièce ennemie");
+                return proceed(plateau,move);
+            }
+        }
+        return proceed(plateau,move);
+        /*if ( plateau.getGrid()[move.xF][move.yF].getPiece().getPlayer()==1){
+            System.out.println("La pièce ne peut pas bouger car elle sortirait du cadre, vous perdez votre tour");
+            return null;
+        }
+        else {
+            System.out.println("La pièce reste dans le cadre");
+            return proceed(plateau,move);
+        }*/
     }
     //trow exeption/string
     /*

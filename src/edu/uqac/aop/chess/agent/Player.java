@@ -7,7 +7,7 @@ public abstract class Player {
 	public static final int BLACK = 0;
 	
 	protected int Colour;
-	protected Board playGround;
+	public Board playGround;
 
 	public abstract boolean makeMove(Move mv);
 	public abstract Move makeMove();
