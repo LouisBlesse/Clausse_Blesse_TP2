@@ -1,10 +1,11 @@
-import edu.uqac.aop.chess.agent.HumanPlayer;
 import edu.uqac.aop.chess.agent.Move;
-import edu.uqac.aop.chess.piece.Piece;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import edu.uqac.aop.chess.*;
+import edu.uqac.aop.chess.agent.Player;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
 
 public aspect Test {
 
@@ -119,6 +120,23 @@ public aspect Test {
             }
         }
         return proceed(plateau,move);
+    }
+
+    //save to file
+    pointcut saveToFile(): call (boolean edu.uqac.aop.chess.agent.Player.makeMove(..)) ;
+    after() returning (boolean legal): saveToFile(){
+        if (legal == true){
+            System.out.println("test" + Arrays.stream(thisJoinPoint.getArgs()).findFirst().get());
+            try {
+
+                PrintWriter pwrite = new PrintWriter(new FileWriter("Logs.txt", true));
+                pwrite.println("Log ->" + Arrays.stream(thisJoinPoint.getArgs()).findFirst().get());
+                pwrite.close();
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
 }
