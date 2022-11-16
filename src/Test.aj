@@ -126,9 +126,7 @@ public aspect Test {
     pointcut saveToFile(): call (boolean edu.uqac.aop.chess.agent.Player.makeMove(..)) ;
     after() returning (boolean legal): saveToFile(){
         if (legal == true){
-            System.out.println("test" + Arrays.stream(thisJoinPoint.getArgs()).findFirst().get());
             try {
-
                 PrintWriter pwrite = new PrintWriter(new FileWriter("Logs.txt", true));
                 pwrite.println("Log ->" + Arrays.stream(thisJoinPoint.getArgs()).findFirst().get());
                 pwrite.close();
